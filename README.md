@@ -60,15 +60,15 @@ Real-time device telemetry pipeline built with Apache Kafka, Python, PostgreSQL,
 
 ## Key Design Decisions
 
-**Kafka partitioning by device_id** — Events for the same device always land on the same partition. The consumer maintains sliding-window state in memory per device with no distributed coordination, no Redis, no shared state. This is the standard pattern for stateful stream processing without a full Flink/Spark deployment.
+**Kafka partitioning by device_id**  Events for the same device always land on the same partition. The consumer maintains sliding-window state in memory per device with no distributed coordination, no Redis, no shared state. This is the standard pattern for stateful stream processing without a full Flink/Spark deployment.
 
-**Welford's online algorithm** — Rolling mean and variance computed in O(1) per event using Welford's method. No full window scan on each update. Supports online removal of evicted values for true sliding-window behavior. See [`anomaly_detector/sliding_window.py`](anomaly_detector/sliding_window.py).
+**Welford's online algorithm**  Rolling mean and variance computed in O(1) per event using Welford's method. No full window scan on each update. Supports online removal of evicted values for true sliding-window behavior. See [`anomaly_detector/sliding_window.py`](anomaly_detector/sliding_window.py).
 
-**Manual Kafka offset commit** — Consumer commits offsets only after a successful PostgreSQL batch write. No event is lost between a Kafka commit and a failed DB write. This trades some throughput for at-least-once delivery semantics.
+**Manual Kafka offset commit**  Consumer commits offsets only after a successful PostgreSQL batch write. No event is lost between a Kafka commit and a failed DB write. This trades some throughput for at-least-once delivery semantics.
 
-**PostgreSQL range partitioning** — `telemetry_events` is partitioned by month. Queries filtered by time range scan only the relevant partition(s). Composite B-tree index on `(device_id, event_timestamp DESC)` covers the primary access pattern: "give me the last N readings for device X."
+**PostgreSQL range partitioning**  `telemetry_events` is partitioned by month. Queries filtered by time range scan only the relevant partition(s). Composite B-tree index on `(device_id, event_timestamp DESC)` covers the primary access pattern: "give me the last N readings for device X."
 
-**Partial index on critical events** — A separate partial index on `event_type = 'critical'` keeps critical-event queries fast without bloating the main index.
+**Partial index on critical events**  A separate partial index on `event_type = 'critical'` keeps critical-event queries fast without bloating the main index.
 
 ---
 
@@ -157,8 +157,8 @@ Benchmarked on a single machine (MacBook M2, 16GB RAM):
 | Consumer processing | < 2ms per event (anomaly detection + deserialization) |
 | DB batch write (200 events) | 8–15ms |
 | End-to-end latency (produce → DB) | 60–95ms (p99) |
-| API response — device metrics | 12–30ms |
-| API response — recent anomalies | 8–20ms |
+| API response  device metrics | 12–30ms |
+| API response  recent anomalies | 8–20ms |
 
 ---
 
