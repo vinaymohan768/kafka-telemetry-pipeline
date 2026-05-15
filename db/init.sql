@@ -3,10 +3,10 @@
 -- Uses PostgreSQL declarative partitioning (range by month) to keep
 -- query plans fast on large datasets without manual partition management.
 
--- ── Extensions ────────────────────────────────────────────────────────────────
+--  Extensions ────────────────────────────────────────────────────────────────
 CREATE EXTENSION IF NOT EXISTS pg_stat_statements;  -- query performance tracking
 
--- ── Telemetry events (partitioned by month) ───────────────────────────────────
+--  Telemetry events (partitioned by month) ───────────────────────────────────
 CREATE TABLE IF NOT EXISTS telemetry_events (
     id                  BIGSERIAL,
     device_id           VARCHAR(20)     NOT NULL,
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS telemetry_events_2026_06
     PARTITION OF telemetry_events
     FOR VALUES FROM ('2026-06-01') TO ('2026-07-01');
 
--- ── Indexes on partitioned table ──────────────────────────────────────────────
+--  Indexes on partitioned table ──────────────────────────────────────────────
 -- Composite B-tree: device lookups filtered by time (most common query pattern)
 CREATE INDEX IF NOT EXISTS idx_telemetry_device_time
     ON telemetry_events (device_id, event_timestamp DESC);
@@ -111,7 +111,7 @@ CREATE INDEX IF NOT EXISTS idx_telemetry_network_time
     ON telemetry_events (network_type, event_timestamp DESC);
 
 
--- ── Anomaly alerts ────────────────────────────────────────────────────────────
+--  Anomaly alerts ────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS anomaly_alerts (
     id              BIGSERIAL PRIMARY KEY,
     device_id       VARCHAR(20)     NOT NULL,
@@ -135,7 +135,7 @@ CREATE INDEX IF NOT EXISTS idx_anomaly_metric
     ON anomaly_alerts (metric, detected_at DESC);
 
 
--- ── Materialized view: per-device 5-minute rollup ─────────────────────────────
+--  Materialized view: per-device 5-minute rollup ─────────────────────────────
 -- Refresh with: SELECT refresh_telemetry_rollup();
 CREATE MATERIALIZED VIEW IF NOT EXISTS telemetry_5min_rollup AS
 SELECT
