@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
 
-  # ── Kafka (KRaft mode — no Zookeeper) ───────────────────────────────────────
+  #  Kafka (KRaft mode — no Zookeeper) ───────────────────────────────────────
   kafka:
     image: confluentinc/cp-kafka:7.6.1
     container_name: kafka
@@ -29,7 +29,7 @@ services:
       timeout: 10s
       retries: 10
 
-  # ── Topic setup ──────────────────────────────────────────────────────────────
+  #  Topic setup ──────────────────────────────────────────────────────────────
   kafka-init:
     image: confluentinc/cp-kafka:7.6.1
     container_name: kafka-init
@@ -49,7 +49,7 @@ services:
       "
     restart: on-failure
 
-  # ── PostgreSQL ───────────────────────────────────────────────────────────────
+  #  PostgreSQL ───────────────────────────────────────────────────────────────
   postgres:
     image: postgres:16-alpine
     container_name: postgres
@@ -78,7 +78,7 @@ services:
       timeout: 5s
       retries: 10
 
-  # ── Producer ─────────────────────────────────────────────────────────────────
+  #  Producer ─────────────────────────────────────────────────────────────────
   producer:
     build:
       context: ./producer
@@ -93,7 +93,7 @@ services:
       EVENTS_PER_SECOND: "500"
     restart: unless-stopped
 
-  # ── Consumer ─────────────────────────────────────────────────────────────────
+  #  Consumer ─────────────────────────────────────────────────────────────────
   consumer:
     build:
       context: .
@@ -119,7 +119,7 @@ services:
       POSTGRES_PASSWORD: telemetry
     restart: unless-stopped
 
-  # ── Query API ─────────────────────────────────────────────────────────────────
+  #  Query API ─────────────────────────────────────────────────────────────────
   api:
     build:
       context: ./api
