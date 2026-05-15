@@ -38,7 +38,7 @@ DB_DSN = (
     f"connect_timeout=5"
 )
 
-# ── Connection pool (simple — use pgbouncer or asyncpg for prod scale) ────────
+#  Connection pool (simple — use pgbouncer or asyncpg for prod scale) ────────
 
 _conn: Optional[psycopg2.extensions.connection] = None
 
@@ -81,7 +81,7 @@ app.add_middleware(
 )
 
 
-# ── Response models ───────────────────────────────────────────────────────────
+#  Response models ───────────────────────────────────────────────────────────
 
 class HealthResponse(BaseModel):
     status: str
@@ -128,7 +128,7 @@ class PipelineStats(BaseModel):
     anomalies_last_hour: int
 
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
+#  Helpers ───────────────────────────────────────────────────────────────────
 
 _start_time = time.monotonic()
 
@@ -140,7 +140,7 @@ def query(sql: str, params=None) -> list[dict]:
         return [dict(row) for row in cur.fetchall()]
 
 
-# ── Routes ────────────────────────────────────────────────────────────────────
+#  Routes ────────────────────────────────────────────────────────────────────
 
 @app.get("/health", response_model=HealthResponse)
 def health():
