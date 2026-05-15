@@ -36,7 +36,7 @@ logging.basicConfig(
 )
 log = logging.getLogger("consumer")
 
-# ── Config ────────────────────────────────────────────────────────────────────
+#  Config ────────────────────────────────────────────────────────────────────
 KAFKA_BOOTSTRAP   = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
 CONSUMER_GROUP    = os.getenv("KAFKA_CONSUMER_GROUP", "telemetry-pipeline")
 TOPIC_IN          = os.getenv("KAFKA_TOPIC_IN", "device-telemetry")
@@ -54,7 +54,7 @@ DB_DSN = (
     f"connect_timeout=10"
 )
 
-# ── DB helpers ────────────────────────────────────────────────────────────────
+#  DB helpers ────────────────────────────────────────────────────────────────
 
 def get_db_conn():
     conn = psycopg2.connect(DB_DSN)
@@ -116,7 +116,7 @@ def flush_anomalies(conn, anomalies: list[AnomalyResult]):
     log.debug("Stored %d anomalies", len(anomalies))
 
 
-# ── Kafka helpers ─────────────────────────────────────────────────────────────
+#  Kafka helpers ─────────────────────────────────────────────────────────────
 
 def build_consumer() -> Consumer:
     return Consumer({
@@ -160,7 +160,7 @@ def publish_alert(producer: Producer, anomaly: AnomalyResult):
     producer.poll(0)
 
 
-# ── Main loop ─────────────────────────────────────────────────────────────────
+#  Main loop ─────────────────────────────────────────────────────────────────
 
 def run():
     log.info("Consumer starting | group=%s, topic=%s", CONSUMER_GROUP, TOPIC_IN)
