@@ -83,7 +83,7 @@ The detector runs a **per-device, per-metric sliding window** of the last 60 rea
 | `throughput_mbps` | 1.8 | 2.5 | Low threshold catches gradual throughput erosion |
 | `memory_usage_pct` | 2.2 | 3.2 | Memory grows slower — higher threshold reduces noise |
 
-The window requires at least 30 readings before flagging anomalies (warmup guard). Approximately 2% of simulated events are injected anomalies — CPU spikes, signal drops, or throughput crashes.
+The window requires at least 30 readings before flagging anomalies (warmup guard). Approximately 2% of simulated events are injected anomalies  CPU spikes, signal drops, or throughput crashes.
 
 ---
 
@@ -123,26 +123,26 @@ curl "http://localhost:8000/devices/DEV-00001/metrics?since_minutes=5"
 
 ```
 kafka-telemetry-pipeline/
-├── producer/
-│   ├── telemetry_producer.py     # Multi-device event simulator
-│   ├── requirements.txt
-│   └── Dockerfile
-├── consumer/
-│   ├── telemetry_consumer.py     # Kafka consumer + DB writer + alert publisher
-│   ├── requirements.txt
-│   └── Dockerfile
-├── anomaly_detector/
-│   ├── __init__.py
-│   └── sliding_window.py         # Welford's online algorithm, Z-score detection
-├── api/
-│   ├── main.py                   # FastAPI query endpoints
-│   ├── requirements.txt
-│   └── Dockerfile
-├── db/
+├   producer/
+│   ├ telemetry_producer.py     # Multi-device event simulator
+│   ├ requirements.txt
+│   └ Dockerfile
+├   consumer/
+│   ├ telemetry_consumer.py     # Kafka consumer + DB writer + alert publisher
+│   ├ requirements.txt
+│   └ Dockerfile
+├   anomaly_detector/
+│   ├ __init__.py
+│   └ sliding_window.py         # Welford's online algorithm, Z-score detection
+├   api/
+│   ├ main.py                   # FastAPI query endpoints
+│   ├ requirements.txt
+│   └ Dockerfile
+├   db/
 │   └── init.sql                  # Schema: partitioned tables, indexes, rollup view
-├── load_test/
-│   └── load_test.py              # Throughput and latency benchmarks
-└── docker-compose.yml
+├   load_test/
+│   └ load_test.py              # Throughput and latency benchmarks
+└   docker-compose.yml
 ```
 
 ---
